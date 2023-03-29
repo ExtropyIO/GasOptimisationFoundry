@@ -12,6 +12,11 @@ docs/
 
 # Dotenv file
 .env
-*vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-*github/workflows 
+.github/workflows 
