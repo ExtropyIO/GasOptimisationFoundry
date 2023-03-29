@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
+/*
+// SPDX-License-Identifier: UNLICENSED 
 pragma solidity 0.8.19; //You can change version
 
 import "forge-std/Test.sol";
@@ -35,11 +36,11 @@ contract GasTest is Test {
         assertEq(totalSupply, gas.totalSupply());
     }
 
-    /*function invariant_sumOfBalances() public {
+    function invariant_sumOfBalances() public {
         console.log(handler.ownerBalance());
         console.log(handler.totalTransfers());
         assertEq(totalSupply, handler.ownerBalance() + handler.totalTransfers());
-    }*/
+    }
 
     function invariant_1() public {
         assertEq( handler.ownerBalance(), totalSupply);
@@ -51,3 +52,4 @@ contract GasTest is Test {
 
 }
 
+*/

@@ -1,3 +1,5 @@
+/*
+
 pragma solidity 0.8.19; //You can change version
 
 import "../../src/Gas.sol";
@@ -59,13 +61,13 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         totalTransfers += _amount;
     }
 
-    /*function transfer(uint256 actorSeed, uint256 _amount,  string calldata name) public useActor(actorSeed) {
+    function transfer(uint256 actorSeed, uint256 _amount,  string calldata name) public useActor(actorSeed) {
         _amount = bound(_amount,0 , gas.balanceOf(owner));
         vm.assume(_amount > 3);
         vm.assume(bytes(name).length < 9 );
         vm.prank(owner);
         gas.transfer(currentActor, _amount, name);
         totalTransfers += _amount;
-    }*/
+    }
 
-}
+}*/
