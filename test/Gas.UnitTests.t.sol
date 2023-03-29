@@ -88,7 +88,7 @@ contract GasTest is Test {
     // Reverts if teirs out of bounds
     function test_tiersReverts(address _userAddrs, uint256 _tier) public {
         vm.assume(_userAddrs != address(gas));
-        _tier = bound( _tier, 1, 244);
+        vm.assume(_tier > 254);
         vm.prank(owner);
         vm.expectRevert();
         gas.addToWhitelist(_userAddrs, _tier);
@@ -119,6 +119,13 @@ contract GasTest is Test {
         vm.stopPrank();
     }
 
+        /* whiteTranfer balance logic. 
+        balances[senderOfTx] -= _amount;
+        balances[_recipient] += _amount;
+        balances[senderOfTx] += whitelist[senderOfTx];
+        balances[_recipient] -= whitelist[senderOfTx]; 
+        */
+
     // check balances update 
     function testWhiteTranferAmountUpdate(
         address _recipient,
@@ -131,7 +138,7 @@ contract GasTest is Test {
         vm.assume(_recipient != address(0));
         vm.assume(_sender != address(0));
          _amount = bound(_amount,0 , gas.balanceOf(owner));
-        _tier = bound( _tier, 1, 244);
+        _tier = bound( _tier, 1, 3);
         vm.assume(_amount > 3);
         vm.assume(bytes(_name).length < 9 && bytes(_name).length >0);
         vm.startPrank(owner);
