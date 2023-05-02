@@ -83,6 +83,10 @@ contract GasTest is Test {
         vm.stopPrank();
         vm.prank(_sender);
         gas.whiteTransfer(_recipient, _amount);
+        (bool a, uint256 b) = gas.getPaymentStatus(address(_sender));
+        console.log(a);
+        assertEq(a, true);
+        assertEq(b, _amount);
     }
 
     // Reverts if teirs out of bounds
