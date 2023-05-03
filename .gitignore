@@ -20,3 +20,5 @@ docs/
 !.vscode/*.code-snippets
 
 .github/workflows 
+
+*lcov.info

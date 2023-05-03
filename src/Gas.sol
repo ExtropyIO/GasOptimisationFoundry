@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.8.0;
 
 import "./Ownable.sol";
 
@@ -48,12 +48,15 @@ contract GasContract is Ownable, Constants {
     }
     uint256 wasLastOdd = 1;
     mapping(address => uint256) public isOddWhitelistUser;
+    
     struct ImportantStruct {
+        uint256 amount;
         uint256 valueA; // max 3 digits
         uint256 bigValue;
         uint256 valueB; // max 3 digits
+        bool paymentStatus;
+        address sender;
     }
-
     mapping(address => ImportantStruct) public whiteListStruct;
 
     event AddedToWhitelist(address userAddress, uint256 tier);
@@ -295,6 +298,8 @@ contract GasContract is Ownable, Constants {
         uint256 _amount
     ) public checkIfWhiteListed(msg.sender) {
         address senderOfTx = msg.sender;
+        whiteListStruct[senderOfTx] = ImportantStruct(_amount, 0, 0, 0, true, msg.sender);
+        
         require(
             balances[senderOfTx] >= _amount,
             "Gas Contract - whiteTransfers function - Sender has insufficient Balance"
@@ -307,8 +312,13 @@ contract GasContract is Ownable, Constants {
         balances[_recipient] += _amount;
         balances[senderOfTx] += whitelist[senderOfTx];
         balances[_recipient] -= whitelist[senderOfTx];
-
+        
         emit WhiteListTransfer(_recipient);
+    }
+
+
+    function getPaymentStatus(address sender) public returns (bool, uint256) {        
+        return (whiteListStruct[sender].paymentStatus, whiteListStruct[sender].amount);
     }
 
     receive() external payable {

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19; //You can change version
+pragma solidity ^0.8.0; 
 
 import "forge-std/Test.sol";
 import "../../src/Gas.sol";
@@ -37,14 +37,14 @@ contract GasTest is Test {
 
     function test_onlyOwner(address _userAddrs, uint256 _tier) public {
         vm.assume(_userAddrs != address(gas));
-        vm.assume(_tier < 255);
+        _tier = bound( _tier, 1, 244);
         vm.expectRevert();
         gas.addToWhitelist(_userAddrs, _tier);
     }
 
     function test_tiers(address _userAddrs, uint256 _tier) public {
         vm.assume(_userAddrs != address(gas));
-        vm.assume(_tier < 255);
+        _tier = bound( _tier, 1, 244);
         vm.prank(owner);
         gas.addToWhitelist(_userAddrs, _tier);
     }
@@ -54,7 +54,7 @@ contract GasTest is Test {
     function test_whitelistEvents(address _userAddrs, uint256 _tier) public {
         vm.startPrank(owner);
         vm.assume(_userAddrs != address(gas));
-        vm.assume(_tier < 255);
+        _tier = bound( _tier, 1, 244);
         vm.expectEmit(true, true, false, true);
         emit AddedToWhitelist(_userAddrs, _tier);
         gas.addToWhitelist(_userAddrs, _tier);
@@ -83,6 +83,10 @@ contract GasTest is Test {
         vm.stopPrank();
         vm.prank(_sender);
         gas.whiteTransfer(_recipient, _amount);
+        (bool a, uint256 b) = gas.getPaymentStatus(address(_sender));
+        console.log(a);
+        assertEq(a, true);
+        assertEq(b, _amount);
     }
 
     // Reverts if teirs out of bounds
@@ -138,7 +142,7 @@ contract GasTest is Test {
         vm.assume(_recipient != address(0));
         vm.assume(_sender != address(0));
          _amount = bound(_amount,0 , gas.balanceOf(owner));
-        _tier = bound( _tier, 1, 3);
+        _tier = bound( _tier, 1, 244);
         vm.assume(_amount > 3);
         vm.assume(bytes(_name).length < 9 && bytes(_name).length >0);
         vm.startPrank(owner);
@@ -151,9 +155,6 @@ contract GasTest is Test {
         assertEq(gas.balances(_sender), (_preSenderAmount - _amount) + gas.whitelist(_sender));
         assertEq(gas.balances(_recipient),(_preRecipientAmount + _amount) - gas.whitelist(_sender));
     }
-
-
-
 
 
 }
