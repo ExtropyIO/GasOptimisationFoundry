@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0; 
 
 import "forge-std/Test.sol";
-import "../../src/Gas.sol";
+import "../src/Gas.sol";
 
 contract GasTest is Test {
     GasContract public gas;
@@ -84,7 +84,6 @@ contract GasTest is Test {
         vm.prank(_sender);
         gas.whiteTransfer(_recipient, _amount);
         (bool a, uint256 b) = gas.getPaymentStatus(address(_sender));
-        console.log(a);
         assertEq(a, true);
         assertEq(b, _amount);
     }
