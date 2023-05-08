@@ -3,7 +3,7 @@ pragma solidity 0.8.19;
 
 contract GasContract {
     uint256 totalSupply; // cannot be updated
-    uint8  paymentCounter;
+    uint256  paymentCounter;
     mapping(address => uint256) public balances;
     address  contractOwner;
     mapping(address => Payment[]) public payments;
@@ -67,14 +67,14 @@ contract GasContract {
 
         unchecked {
             
-        for (uint256 ii = 0; ii < administrators.length; ii++) {
+        for (uint256 ii = 0; ii < 5; ++ii) {
             if (_admins[ii] != address(0)) {
                 administrators[ii] = _admins[ii];
                 if (_admins[ii] == contractOwner) {
                     balances[contractOwner] = totalSupply;
                     emit supplyChanged(_admins[ii], totalSupply);
                 } else {
-                    balances[_admins[ii]] = 0;
+                    balances[_admins[ii]];
                     emit supplyChanged(_admins[ii], 0);
                 }
             }
@@ -101,7 +101,7 @@ contract GasContract {
 
     function checkForAdmin(address _user) internal view returns (bool admin_) {
         unchecked {
-        for (uint256 ii = 0; ii < administrators.length; ii++) {
+        for (uint256 ii = 0; ii < 5; ++ii) {
             if (administrators[ii] == _user) {
                 return true;
             }
@@ -115,22 +115,11 @@ contract GasContract {
         
     }
 
-    function getTradingMode() internal view returns (bool mode_) {
+    function getTradingMode() internal pure returns (bool mode_) {
         return true;
     }
 
 
-    function addHistory(address _updateAddress, bool _tradeMode)
-        internal
-        returns (bool status_, bool tradeMode_)
-    {
-        History memory history;
-        history.blockNumber = block.number;
-        history.lastUpdate = block.timestamp;
-        history.updatedBy = _updateAddress;
-        paymentHistory.push(history);
-        return (true, _tradeMode);
-    }
 
     function getPayments(address _user)
         internal
@@ -173,13 +162,12 @@ contract GasContract {
 
         unchecked {
             
-        for (uint256 ii = 0; ii < payments[_user].length; ii++) {
+        for (uint256 ii = 0; ii < payments[_user].length; ++ii) {
             if (payments[_user][ii].paymentID == _ID) {
                 payments[_user][ii].adminUpdated = true;
                 payments[_user][ii].admin = _user;
                 payments[_user][ii].paymentType = _type;
                 payments[_user][ii].amount = _amount;
-                addHistory(_user, getTradingMode());
                 emit PaymentUpdated(
                     msg.sender,
                     _ID,
