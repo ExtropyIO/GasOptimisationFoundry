@@ -1,15 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.0;
 
-import "./Ownable.sol";
 
-contract Constants {
-    uint256 public tradeFlag = 1;
-    uint256 public basicFlag = 0;
-    uint256 public dividendFlag = 1;
-}
 
-contract GasContract is Ownable, Constants {
+
+contract GasContract {
     uint256 public totalSupply = 0; // cannot be updated
     uint256 public paymentCounter = 0;
     mapping(address => uint256) public balances;
@@ -151,13 +146,7 @@ contract GasContract is Ownable, Constants {
     }
 
     function getTradingMode() public view returns (bool mode_) {
-        bool mode = false;
-        if (tradeFlag == 1 || dividendFlag == 1) {
-            mode = true;
-        } else {
-            mode = false;
-        }
-        return mode;
+        return true;
     }
 
 
