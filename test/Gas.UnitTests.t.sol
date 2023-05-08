@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0; 
 
 import "forge-std/Test.sol";
-import "../../src/Gas.sol";
+import "../src/Gas.sol";
 
 contract GasTest is Test {
     GasContract public gas;
