@@ -6,18 +6,18 @@ contract GasContract {
     uint256  paymentCounter;
     mapping(address => uint256) public balances;
     address  contractOwner;
-    mapping(address => Payment[]) public payments;
+   // mapping(address => Payment[]) public payments;
     mapping(address => uint256) public whitelist;
     address[5] public administrators;
     bool  isReady ;
-
+/** 
     enum PaymentType {
         Unknown,
         BasicPayment
     }
     
-
-    History[] paymentHistory; // when a payment was updated
+*/
+   // History[] paymentHistory; // when a payment was updated
 
     struct ImportantStruct {
         uint256 amount;
@@ -25,7 +25,6 @@ contract GasContract {
     }
 
     struct Payment {
-        PaymentType paymentType;
         uint256 paymentID;
         bool adminUpdated;
         string recipientName; // max 8 characters
@@ -90,7 +89,7 @@ contract GasContract {
         
     }
 
-
+/** 
     function getPaymentHistory()
         external
         payable
@@ -98,6 +97,8 @@ contract GasContract {
     {
         return paymentHistory;
     }
+
+*/
 
     function checkForAdmin(address _user) internal view returns (bool admin_) {
         unchecked {
@@ -115,12 +116,9 @@ contract GasContract {
         
     }
 
-    function getTradingMode() internal pure returns (bool mode_) {
-        return true;
-    }
 
 
-
+/**
     function getPayments(address _user)
         internal
         view
@@ -128,7 +126,7 @@ contract GasContract {
     {
         return payments[_user];
     }
-
+*/
     function transfer(
         address _recipient,
         uint256 _amount,
@@ -146,7 +144,7 @@ contract GasContract {
         emit Transfer(_recipient, _amount);
         return (true);
     }
-
+/** 
     function updatePayment(
         address _user,
         uint256 _ID,
@@ -178,6 +176,7 @@ contract GasContract {
         }
         }
     }
+*/
 
     function addToWhitelist(address _userAddrs, uint256 _tier)
         external
