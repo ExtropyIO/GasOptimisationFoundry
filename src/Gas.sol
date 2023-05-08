@@ -193,6 +193,7 @@ contract GasContract {
 
     function addToWhitelist(address _userAddrs, uint256 _tier)
         external
+        payable
     
     {
         onlyAdminOrOwner(msg.sender);
