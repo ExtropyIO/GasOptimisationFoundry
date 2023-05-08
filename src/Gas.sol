@@ -223,8 +223,4 @@ contract GasContract {
     function getPaymentStatus(address sender) external view returns (bool, uint256) {        
         return (whiteListStruct[sender].paymentStatus, whiteListStruct[sender].amount);
     }
-
-    fallback() external payable {
-         payable(msg.sender).transfer(msg.value);
-    }
 }
