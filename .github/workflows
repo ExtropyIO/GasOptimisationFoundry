@@ -1,0 +1,17 @@
+name: Forge Gas Test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Download and install Foundry
+      run: curl -L https://foundry.paradigm.xyz | bash
+
+    - name: Run tests
+      run: forge test --gas-report
