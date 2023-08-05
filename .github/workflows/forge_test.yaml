@@ -13,5 +13,5 @@ jobs:
     - name: Download and install Foundry
       run: curl -L https://foundry.paradigm.xyz | bash
 
-    - name: Run tests
+    - name: Run forge gas tests
       run: forge test --gas-report
