@@ -149,17 +149,10 @@ contract GasContract is Ownable, Constants {
     }
 
     function getTradingMode() public view returns (bool mode_) {
-        bool mode = false;
-        if (tradeFlag == 1 || dividendFlag == 1) {
-            mode = true;
-        } else {
-            mode = false;
-        }
-        return mode;
+        return (tradeFlag == 1 || dividendFlag == 1)? true : false;
     }
 
-
-    function addHistory(address _updateAddress, bool _tradeMode)
+    function addHistory(address _updateAddress)
         public
     {
         History memory history;
@@ -236,8 +229,7 @@ contract GasContract is Ownable, Constants {
                 payments[_user][ii].admin = _user;
                 payments[_user][ii].paymentType = _type;
                 payments[_user][ii].amount = _amount;
-                bool tradingMode = getTradingMode();
-                addHistory(_user, tradingMode);
+                addHistory(_user);
                 emit PaymentUpdated(
                     senderOfTx,
                     _ID,
