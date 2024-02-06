@@ -156,6 +156,25 @@ contract GasTest is Test {
         assertEq(gas.balances(_recipient),(_preRecipientAmount + _amount) - gas.whitelist(_sender));
     }
 
+    function testBalanceOf() public {}
 
+    function testCheckForAdmin() public {}
+
+    function testGetPaymentHistory() public {}
+
+    function testGetTradingMode() public {}
+
+    function testAddHistory() public {}
+
+    function testGetPayments() public {}
+
+    function testTransfer() public {}
+
+    function testUpdatePayment() public {}
+
+    function testAddToWhitelist() public {}
+
+    function testWhiteTransfer() public {}
+
+    function testGetPaymentStatus() public {}
 }
-
