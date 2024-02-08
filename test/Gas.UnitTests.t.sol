@@ -187,9 +187,13 @@ contract GasTest is Test {
         assertEq(gas.balanceOf(owner), ownerBal - _amount);
     }
 
-    function testUpdatePayment() public {}
+    function testUpdatePayment() public {
+        vm.startPrank(owner);
+    }
 
-    function testAddToWhitelist() public {}
+    function testAddToWhitelist() public {
+        vm.startPrank(owner);
+    }
 
     function testWhiteTransfer() public {}
 
