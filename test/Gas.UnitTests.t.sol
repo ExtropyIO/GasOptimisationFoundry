@@ -156,7 +156,10 @@ contract GasTest is Test {
         assertEq(gas.balances(_recipient),(_preRecipientAmount + _amount) - gas.whitelist(_sender));
     }
 
-    function testBalanceOf() public {}
+    function testBalanceOf() public {
+        uint256 bal = gas.balanceOf(owner);
+        assertEq(bal, totalSupply);
+    }
 
     function testCheckForAdmin() public {}
 
