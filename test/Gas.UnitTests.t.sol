@@ -177,10 +177,14 @@ contract GasTest is Test {
     function testTransfer(uint256 _amount, address _recipient) public {
         vm.assume(_amount <= totalSupply);
         vm.startPrank(owner);
+
+        uint256 ownerBal = gas.balanceOf(owner);
         uint256 balBefore = gas.balanceOf(_recipient);
         gas.transfer(_recipient, _amount, "name");
         uint256 balAfter = gas.balanceOf(_recipient);
+
         assertEq(balAfter, balBefore + _amount);
+        assertEq(gas.balanceOf(owner), ownerBal - _amount);
     }
 
     function testUpdatePayment() public {}
