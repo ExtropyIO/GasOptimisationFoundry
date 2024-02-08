@@ -191,8 +191,12 @@ contract GasTest is Test {
         vm.startPrank(owner);
     }
 
-    function testAddToWhitelist() public {
-        vm.startPrank(owner);
+    function testAddToWhitelist(address user, uint256 tier) public {
+        vm.expectRevert();
+        vm.startPrank(user);
+        vm.assume(user != owner);
+        gas.addToWhitelist(user, tier);
+        vm.stopPrank();
     }
 
     function testWhiteTransfer() public {}
