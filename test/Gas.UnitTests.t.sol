@@ -166,13 +166,14 @@ contract GasTest is Test {
         assertEq(isAdmin, true);
     }
 
+    // TODO: No Specification
     function testGetPaymentHistory() public {}
 
+    // TODO: No Specification
     function testGetTradingMode() public {}
 
+    // TODO: No Specification
     function testAddHistory() public {}
-
-    function testGetPayments() public {}
 
     function testTransfer(uint256 _amount, address _recipient) public {
         vm.assume(_amount <= totalSupply);
