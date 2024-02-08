@@ -187,10 +187,6 @@ contract GasTest is Test {
         assertEq(gas.balanceOf(owner), ownerBal - _amount);
     }
 
-    function testUpdatePayment() public {
-        vm.startPrank(owner);
-    }
-
     function testAddToWhitelist(address user, uint256 tier) public {
         vm.expectRevert();
         vm.startPrank(user);
@@ -199,7 +195,5 @@ contract GasTest is Test {
         vm.stopPrank();
     }
 
-    function testWhiteTransfer() public {}
-
-    function testGetPaymentStatus() public {}
+    function testGetPaymentStatus(address sender) public {
 }
