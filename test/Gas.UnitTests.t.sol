@@ -161,7 +161,10 @@ contract GasTest is Test {
         assertEq(bal, totalSupply);
     }
 
-    function testCheckForAdmin() public {}
+    function testCheckForAdmin() public {
+        bool isAdmin = gas.checkForAdmin(owner);
+        assertEq(isAdmin, true);
+    }
 
     function testGetPaymentHistory() public {}
 
