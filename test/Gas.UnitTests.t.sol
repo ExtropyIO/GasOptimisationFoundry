@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0; 
 
 import "forge-std/Test.sol";
-import "../../src/Gas.sol";
+import "../src/Gas.sol";
 
 contract GasTest is Test {
     GasContract public gas;
@@ -156,6 +156,45 @@ contract GasTest is Test {
         assertEq(gas.balances(_recipient),(_preRecipientAmount + _amount) - gas.whitelist(_sender));
     }
 
+    function testBalanceOf() public {
+        uint256 bal = gas.balanceOf(owner);
+        assertEq(bal, totalSupply);
+    }
 
+    function testCheckForAdmin() public {
+        bool isAdmin = gas.checkForAdmin(owner);
+        assertEq(isAdmin, true);
+    }
+
+    // TODO: No Specification
+    function testGetPaymentHistory() public {}
+
+    // TODO: No Specification
+    function testGetTradingMode() public {}
+
+    // TODO: No Specification
+    function testAddHistory() public {}
+
+    function testTransfer(uint256 _amount, address _recipient) public {
+        vm.assume(_amount <= totalSupply);
+        vm.startPrank(owner);
+
+        uint256 ownerBal = gas.balanceOf(owner);
+        uint256 balBefore = gas.balanceOf(_recipient);
+        gas.transfer(_recipient, _amount, "name");
+        uint256 balAfter = gas.balanceOf(_recipient);
+
+        assertEq(balAfter, balBefore + _amount);
+        assertEq(gas.balanceOf(owner), ownerBal - _amount);
+    }
+
+    function testAddToWhitelist(address user, uint256 tier) public {
+        vm.expectRevert();
+        vm.startPrank(user);
+        vm.assume(user != owner);
+        gas.addToWhitelist(user, tier);
+        vm.stopPrank();
+    }
+
+    function testGetPaymentStatus(address sender) public {
 }
-
