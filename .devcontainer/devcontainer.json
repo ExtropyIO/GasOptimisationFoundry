@@ -1,0 +1,24 @@
+{
+  "name": "Gas Optimizations",
+  "image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
+  // FIXME: Uncomment feature if foundry adds this https://github.com/foundry-rs/foundry/issues/7290
+  // "features": {
+  //   "ghcr.io/foundry-rs/foundry": {}
+  // }
+  // "postCreateCommand": "forge test --gas-report",
+
+  // TODO: Remove commands if this feature is added https://github.com/foundry-rs/foundry/issues/7290
+  "postCreateCommand": "curl -L https://foundry.paradigm.xyz | bash",
+  "postStartCommand": "/home/vscode/.foundry/bin/foundryup",
+  "postAttachCommand": "/home/vscode/.foundry/bin/forge test --gas-report",
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "JuanBlanco.solidity",
+        "hosho.solidity-debugger",
+        "wayou.vscode-todo-highlight"
+      ]
+      }
+  }
+}
