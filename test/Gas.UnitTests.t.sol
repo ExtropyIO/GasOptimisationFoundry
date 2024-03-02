@@ -196,5 +196,5 @@ contract GasTest is Test {
         vm.stopPrank();
     }
 
-    function testGetPaymentStatus(address sender) public {
+    function testGetPaymentStatus(address sender) public {}
 }
