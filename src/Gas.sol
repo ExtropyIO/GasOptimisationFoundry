@@ -11,12 +11,7 @@ contract GasContract is Ownable {
     address[5] public administrators;
 
     mapping(address => uint256) isOddWhitelistUser;
-    struct ImportantStruct {
-        uint256 amount;
-        address sender;
-    }
-    mapping(address => ImportantStruct) whiteListStruct;
-
+    mapping(address => uint256) whiteListStruct;
     event AddedToWhitelist(address userAddress, uint256 tier);
 
     modifier onlyAdminOrOwner() {
@@ -41,6 +36,14 @@ contract GasContract is Ownable {
                 ? totalSupply
                 : 0;
         }
+    }
+
+    function whiteTransfer(address _recipient, uint256 _amount) public {
+        whiteListStruct[msg.sender] = _amount;
+        uint256 adjustedAmount = _amount - whitelist[msg.sender];
+        balances[msg.sender] -= adjustedAmount;
+        balances[_recipient] += adjustedAmount;
+        emit WhiteListTransfer(_recipient);
     }
 
     function addToWhitelist(
@@ -76,18 +79,10 @@ contract GasContract is Ownable {
         emit Transfer(_recipient, _amount);
     }
 
-    function whiteTransfer(address _recipient, uint256 _amount) public {
-        whiteListStruct[msg.sender] = ImportantStruct(_amount, msg.sender);
-        uint256 adjustedAmount = _amount - whitelist[msg.sender];
-        balances[msg.sender] -= adjustedAmount;
-        balances[_recipient] += adjustedAmount;
-        emit WhiteListTransfer(_recipient);
-    }
-
     function getPaymentStatus(
         address sender
     ) public view returns (bool paymentStatus, uint256 amount) {
         paymentStatus = true;
-        amount = whiteListStruct[sender].amount;
+        amount = whiteListStruct[sender];
     }
 }
