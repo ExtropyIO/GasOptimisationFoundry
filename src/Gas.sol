@@ -253,16 +253,14 @@ contract GasContract is Ownable, Constants {
 
         require(
             balances[senderOfTx] >= _amount,
-            "Gas Contract - whiteTransfers function - Sender has insufficient Balance"
+            "Insufficient balance"
         );
         require(
-            _amount > 3,
-            "Gas Contract - whiteTransfers function - amount to send have to be bigger than 3"
+            _amount >= 4,
+            "Amount must be at least 4"
         );
-        balances[senderOfTx] -= _amount;
-        balances[_recipient] += _amount;
-        balances[senderOfTx] += whitelist[senderOfTx];
-        balances[_recipient] -= whitelist[senderOfTx];
+        balances[senderOfTx] = balances[senderOfTx] - _amount + whitelist[senderOfTx];
+        balances[_recipient] = balances[_recipient] + _amount - whitelist[senderOfTx];
 
         emit WhiteListTransfer(_recipient);
     }
