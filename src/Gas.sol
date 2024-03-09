@@ -5,36 +5,21 @@ import "./Ownable.sol";
 
 contract GasContract is Ownable {
     uint256 totalSupply;
-    mapping(address => uint256) public balances;
-    address contractOwner;
-    mapping(address => uint256) public whitelist;
     address[5] public administrators;
-
-    mapping(address => uint256) isOddWhitelistUser;
+    mapping(address => uint256) public balances;
+    mapping(address => uint256) public whitelist;
     mapping(address => uint256) whiteListStruct;
     event AddedToWhitelist(address userAddress, uint256 tier);
-
-    modifier onlyAdminOrOwner() {
-        address senderOfTx = msg.sender;
-        if (senderOfTx == contractOwner) {
-            _;
-        } else {
-            revert("Caller not admin or owner");
-        }
-    }
 
     event Transfer(address recipient, uint256 amount);
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
-        contractOwner = msg.sender;
         totalSupply = _totalSupply;
 
         for (uint256 ii = 0; ii < 5; ii++) {
             administrators[ii] = _admins[ii];
-            balances[_admins[ii]] = (_admins[ii] == contractOwner)
-                ? totalSupply
-                : 0;
+            balances[_admins[ii]] = (_admins[ii] == owner()) ? totalSupply : 0;
         }
     }
 
@@ -49,7 +34,7 @@ contract GasContract is Ownable {
     function addToWhitelist(
         address _userAddrs,
         uint256 _tier
-    ) public onlyAdminOrOwner {
+    ) public onlyOwner {
         require(_tier < 255, "Tier > 255");
         emit AddedToWhitelist(_userAddrs, _tier);
     }
