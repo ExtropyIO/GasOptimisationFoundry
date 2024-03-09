@@ -29,7 +29,7 @@ contract GasContract is Ownable, Constants {
     }
     PaymentType constant defaultPayment = PaymentType.Unknown;
 
-    History[] public paymentHistory; // when a payment was updated
+    History[] public paymentHistory; // when a payment was updated // when a payment was updated
 
     struct Payment {
         PaymentType paymentType;
@@ -62,18 +62,13 @@ contract GasContract is Ownable, Constants {
 
     modifier onlyAdminOrOwner() {
         address senderOfTx = msg.sender;
-        if (checkForAdmin(senderOfTx)) {
-            require(
-                checkForAdmin(senderOfTx),
-                "Gas Contract Only Admin Check-  Caller not admin"
-            );
+        bool isAdmin = checkForAdmin(senderOfTx);
+        if (isAdmin) {
             _;
         } else if (senderOfTx == contractOwner) {
             _;
         } else {
-            revert(
-                "Error in Gas contract - onlyAdminOrOwner modifier : revert happened because the originator of the transaction was not the admin, and furthermore he wasn't the owner of the contract, so he cannot run this function"
-            );
+            revert("Caller not admin or owner");
         }
     }
 
