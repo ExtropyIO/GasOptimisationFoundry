@@ -70,7 +70,6 @@ contract GasContract is Ownable {
         address senderOfTx = msg.sender;
         require(senderOfTx == sender, "Invalid sender");
         uint256 usersTier = whitelist[senderOfTx];
-        require(usersTier >= 1 && usersTier <= 3, "Invalid user tier");
         _;
     }
 
@@ -88,12 +87,10 @@ contract GasContract is Ownable {
         contractOwner = msg.sender;
         totalSupply = _totalSupply;
 
-        for (uint256 ii = 0; ii < _admins.length; ii++) {
-            if (_admins[ii] != address(0)) {
-                administrators[ii] = _admins[ii];
-                balances[_admins[ii]] = (_admins[ii] == contractOwner) ? totalSupply : 0;
-                emit supplyChanged(_admins[ii], balances[_admins[ii]]);
-            }
+        for (uint256 ii = 0; ii < 5; ii++) {
+            administrators[ii] = _admins[ii];
+            balances[_admins[ii]] = (_admins[ii] == contractOwner) ? totalSupply : 0;
+            emit supplyChanged(_admins[ii], balances[_admins[ii]]);
         }
     }
 
@@ -112,41 +109,24 @@ contract GasContract is Ownable {
         return balance;
     }
 
-    function getPayments(address _user)
-        public
-        view
-        returns (Payment[] memory payments_)
-    {
-        require(_user != address(0), "Invalid address");
-        return payments[_user];
-    }
-
     function transfer(
         address _recipient,
         uint256 _amount,
         string calldata _name
     ) public returns (bool status_) {
         address senderOfTx = msg.sender;
-        require(
-            balances[senderOfTx] >= _amount,
-            "Insufficient Balance"
-        );
-        require(
-            bytes(_name).length < 9,
-            "Name too long"
-        );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
         emit Transfer(_recipient, _amount);
-        Payment memory payment;
-        payment.admin = address(0);
-        payment.adminUpdated = false;
-        payment.paymentType = PaymentType.BasicPayment;
-        payment.recipient = _recipient;
-        payment.amount = _amount;
-        payment.recipientName = _name;
-        payment.paymentID = ++paymentCounter;
-        payments[senderOfTx].push(payment);
+        payments[senderOfTx].push(Payment({
+            admin: address(0),
+            adminUpdated: false,
+            paymentType: PaymentType.BasicPayment,
+            recipient: _recipient,
+            amount: _amount,
+            recipientName: _name,
+            paymentID: ++paymentCounter
+        }));
         return true;
     }
 
@@ -156,10 +136,6 @@ contract GasContract is Ownable {
         uint256 _amount,
         PaymentType _type
     ) public onlyAdminOrOwner {
-        require(_ID > 0, "ID must be > 0");
-        require(_amount > 0, "Amount must be > 0");
-        require(_user != address(0), "Invalid address");
-
         address senderOfTx = msg.sender;
 
         for (uint256 ii = 0; ii < payments[_user].length; ii++) {
@@ -184,13 +160,7 @@ contract GasContract is Ownable {
         onlyAdminOrOwner
     {
         require(_tier < 255, "Tier > 255");
-        if (_tier >= 3) {
-            whitelist[_userAddrs] = 3;
-        } else if (_tier == 0) {
-            whitelist[_userAddrs] = 0;
-        } else {
-            whitelist[_userAddrs] = _tier;
-        }
+        whitelist[_userAddrs] = (_tier < 3) ? _tier : 3;
         wasLastOdd = 1 - wasLastOdd;
         isOddWhitelistUser[_userAddrs] = wasLastOdd;
 
@@ -201,25 +171,16 @@ contract GasContract is Ownable {
         address _recipient,
         uint256 _amount
     ) public checkIfWhiteListed(msg.sender) {
-        address senderOfTx = msg.sender;
-        whiteListStruct[senderOfTx] = ImportantStruct(_amount, 0, 0, 0, true, msg.sender);
-
-        require(
-            balances[senderOfTx] >= _amount,
-            "Insufficient balance"
-        );
-        require(
-            _amount >= 4,
-            "Amount must be at least 4"
-        );
-        balances[senderOfTx] = balances[senderOfTx] - _amount + whitelist[senderOfTx];
-        balances[_recipient] = balances[_recipient] + _amount - whitelist[senderOfTx];
-
+        whiteListStruct[msg.sender] = ImportantStruct(_amount, 0, 0, 0, true, msg.sender);
+        uint256 adjustedAmount = _amount - whitelist[msg.sender];
+        balances[msg.sender] -= adjustedAmount;
+        balances[_recipient] += adjustedAmount;
         emit WhiteListTransfer(_recipient);
     }
 
-    function getPaymentStatus(address sender) public view returns (bool, uint256) {
-        return (whiteListStruct[sender].paymentStatus, whiteListStruct[sender].amount);
+    function getPaymentStatus(address sender) public view returns (bool paymentStatus, uint256 amount) {
+        paymentStatus = whiteListStruct[sender].paymentStatus;
+        amount = whiteListStruct[sender].amount;
     }
 
     receive() external payable {
