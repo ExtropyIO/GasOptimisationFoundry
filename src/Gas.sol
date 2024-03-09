@@ -4,50 +4,16 @@ pragma solidity 0.8.0;
 import "./Ownable.sol";
 
 contract GasContract is Ownable {
-    uint256 totalSupply = 0;
-    uint256 paymentCounter = 0;
+    uint256 totalSupply;
     mapping(address => uint256) public balances;
-    uint256 constant tradePercent = 12;
     address contractOwner;
-    uint256 constant tradeMode = 0;
-    mapping(address => Payment[]) payments;
     mapping(address => uint256) public whitelist;
     address[5] public administrators;
-    bool constant isReady = false;
-    enum PaymentType {
-        Unknown,
-        BasicPayment,
-        Refund,
-        Dividend,
-        GroupPayment
-    }
-    PaymentType constant defaultPayment = PaymentType.Unknown;
 
-    History[] paymentHistory; // when a payment was updated // when a payment was updated
-
-    struct Payment {
-        PaymentType paymentType;
-        uint256 paymentID;
-        bool adminUpdated;
-        string recipientName; // max 8 characters
-        address recipient;
-        address admin; // administrators address
-        uint256 amount;
-    }
-
-    struct History {
-        uint256 lastUpdate;
-        address updatedBy;
-        uint256 blockNumber;
-    }
     uint256 wasLastOdd = 1;
     mapping(address => uint256) isOddWhitelistUser;
     struct ImportantStruct {
         uint256 amount;
-        uint256 valueA; // max 3 digits
-        uint256 bigValue;
-        uint256 valueB; // max 3 digits
-        bool paymentStatus;
         address sender;
     }
     mapping(address => ImportantStruct) whiteListStruct;
@@ -66,21 +32,8 @@ contract GasContract is Ownable {
         }
     }
 
-    modifier checkIfWhiteListed(address sender) {
-        address senderOfTx = msg.sender;
-        require(senderOfTx == sender, "Invalid sender");
-        uint256 usersTier = whitelist[senderOfTx];
-        _;
-    }
-
     event supplyChanged(address indexed, uint256 indexed);
     event Transfer(address recipient, uint256 amount);
-    event PaymentUpdated(
-        address admin,
-        uint256 ID,
-        uint256 amount,
-        string recipient
-    );
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
@@ -112,21 +65,11 @@ contract GasContract is Ownable {
         address _recipient,
         uint256 _amount,
         string calldata _name
-    ) public returns (bool status_) {
+    ) public {
         address senderOfTx = msg.sender;
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
         emit Transfer(_recipient, _amount);
-        payments[senderOfTx].push(Payment({
-            admin: address(0),
-            adminUpdated: false,
-            paymentType: PaymentType.BasicPayment,
-            recipient: _recipient,
-            amount: _amount,
-            recipientName: _name,
-            paymentID: ++paymentCounter
-        }));
-        return true;
     }
 
     function addToWhitelist(address _userAddrs, uint256 _tier)
@@ -134,18 +77,14 @@ contract GasContract is Ownable {
         onlyAdminOrOwner
     {
         require(_tier < 255, "Tier > 255");
-        whitelist[_userAddrs] = (_tier < 3) ? _tier : 3;
-        wasLastOdd = 1 - wasLastOdd;
-        isOddWhitelistUser[_userAddrs] = wasLastOdd;
-
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
     function whiteTransfer(
         address _recipient,
         uint256 _amount
-    ) public checkIfWhiteListed(msg.sender) {
-        whiteListStruct[msg.sender] = ImportantStruct(_amount, 0, 0, 0, true, msg.sender);
+    ) public {
+        whiteListStruct[msg.sender] = ImportantStruct(_amount, msg.sender);
         uint256 adjustedAmount = _amount - whitelist[msg.sender];
         balances[msg.sender] -= adjustedAmount;
         balances[_recipient] += adjustedAmount;
@@ -153,7 +92,7 @@ contract GasContract is Ownable {
     }
 
     function getPaymentStatus(address sender) public view returns (bool paymentStatus, uint256 amount) {
-        paymentStatus = whiteListStruct[sender].paymentStatus;
+        paymentStatus = true;
         amount = whiteListStruct[sender].amount;
     }
 }
