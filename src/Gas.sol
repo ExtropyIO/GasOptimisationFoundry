@@ -3,23 +3,20 @@ pragma solidity 0.8.0;
 
 import "./Ownable.sol";
 
-contract Constants {
-    uint256 public constant tradeFlag = 1;
-    uint256 public constant basicFlag = 0;
-    uint256 public constant dividendFlag = 1;
-}
-
-contract GasContract is Ownable, Constants {
-    uint256 public totalSupply = 0;
-    uint256 public paymentCounter = 0;
+contract GasContract is Ownable {
+    bool constant tradeFlag = true;
+    bool constant basicFlag = false;
+    bool constant dividendFlag = true;
+    uint256 totalSupply = 0;
+    uint256 paymentCounter = 0;
     mapping(address => uint256) public balances;
-    uint256 public constant tradePercent = 12;
-    address public contractOwner;
-    uint256 public constant tradeMode = 0;
-    mapping(address => Payment[]) public payments;
+    uint256 constant tradePercent = 12;
+    address contractOwner;
+    uint256 constant tradeMode = 0;
+    mapping(address => Payment[]) payments;
     mapping(address => uint256) public whitelist;
     address[5] public administrators;
-    bool public isReady = false;
+    bool constant isReady = false;
     enum PaymentType {
         Unknown,
         BasicPayment,
@@ -29,7 +26,7 @@ contract GasContract is Ownable, Constants {
     }
     PaymentType constant defaultPayment = PaymentType.Unknown;
 
-    History[] public paymentHistory; // when a payment was updated // when a payment was updated
+    History[] paymentHistory; // when a payment was updated // when a payment was updated
 
     struct Payment {
         PaymentType paymentType;
@@ -47,7 +44,7 @@ contract GasContract is Ownable, Constants {
         uint256 blockNumber;
     }
     uint256 wasLastOdd = 1;
-    mapping(address => uint256) public isOddWhitelistUser;
+    mapping(address => uint256) isOddWhitelistUser;
     struct ImportantStruct {
         uint256 amount;
         uint256 valueA; // max 3 digits
@@ -56,7 +53,7 @@ contract GasContract is Ownable, Constants {
         bool paymentStatus;
         address sender;
     }
-    mapping(address => ImportantStruct) public whiteListStruct;
+    mapping(address => ImportantStruct) whiteListStruct;
 
     event AddedToWhitelist(address userAddress, uint256 tier);
 
@@ -127,7 +124,7 @@ contract GasContract is Ownable, Constants {
     }
 
     function getTradingMode() public pure returns (bool) {
-        return tradeFlag == 1 || dividendFlag == 1;
+        return tradeFlag == true || dividendFlag == true;
     }
 
 
