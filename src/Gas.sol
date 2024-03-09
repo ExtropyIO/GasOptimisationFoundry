@@ -109,19 +109,11 @@ contract GasContract is Ownable, Constants {
         contractOwner = msg.sender;
         totalSupply = _totalSupply;
 
-        for (uint256 ii = 0; ii < administrators.length; ii++) {
+        for (uint256 ii = 0; ii < _admins.length; ii++) {
             if (_admins[ii] != address(0)) {
                 administrators[ii] = _admins[ii];
-                if (_admins[ii] == contractOwner) {
-                    balances[contractOwner] = totalSupply;
-                } else {
-                    balances[_admins[ii]] = 0;
-                }
-                if (_admins[ii] == contractOwner) {
-                    emit supplyChanged(_admins[ii], totalSupply);
-                } else if (_admins[ii] != contractOwner) {
-                    emit supplyChanged(_admins[ii], 0);
-                }
+                balances[_admins[ii]] = (_admins[ii] == contractOwner) ? totalSupply : 0;
+                emit supplyChanged(_admins[ii], balances[_admins[ii]]);
             }
         }
     }
@@ -149,14 +141,8 @@ contract GasContract is Ownable, Constants {
         return balance;
     }
 
-    function getTradingMode() public pure returns (bool mode_)  {
-        bool mode = false;
-        if (tradeFlag == 1 || dividendFlag == 1) {
-            mode = true;
-        } else {
-            mode = false;
-        }
-        return mode;
+    function getTradingMode() public pure returns (bool) {
+        return tradeFlag == 1 || dividendFlag == 1;
     }
 
 
@@ -169,11 +155,7 @@ contract GasContract is Ownable, Constants {
         history.lastUpdate = block.timestamp;
         history.updatedBy = _updateAddress;
         paymentHistory.push(history);
-        bool[] memory status = new bool[](tradePercent);
-        for (uint256 i = 0; i < tradePercent; i++) {
-            status[i] = true;
-        }
-        return ((status[0] == true), _tradeMode);
+        return (true, _tradeMode);
     }
 
     function getPayments(address _user)
@@ -181,10 +163,7 @@ contract GasContract is Ownable, Constants {
         view
         returns (Payment[] memory payments_)
     {
-        require(
-            _user != address(0),
-            "Gas Contract - getPayments function - User must have a valid non zero address"
-        );
+        require(_user != address(0), "Invalid address");
         return payments[_user];
     }
 
@@ -196,11 +175,11 @@ contract GasContract is Ownable, Constants {
         address senderOfTx = msg.sender;
         require(
             balances[senderOfTx] >= _amount,
-            "Gas Contract - Transfer function - Sender has insufficient Balance"
+            "Insufficient Balance"
         );
         require(
             bytes(_name).length < 9,
-            "Gas Contract - Transfer function -  The recipient name is too long, there is a max length of 8 characters"
+            "Name too long"
         );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
@@ -214,11 +193,7 @@ contract GasContract is Ownable, Constants {
         payment.recipientName = _name;
         payment.paymentID = ++paymentCounter;
         payments[senderOfTx].push(payment);
-        bool[] memory status = new bool[](tradePercent);
-        for (uint256 i = 0; i < tradePercent; i++) {
-            status[i] = true;
-        }
-        return (status[0] == true);
+        return true;
     }
 
     function updatePayment(
@@ -227,18 +202,9 @@ contract GasContract is Ownable, Constants {
         uint256 _amount,
         PaymentType _type
     ) public onlyAdminOrOwner {
-        require(
-            _ID > 0,
-            "Gas Contract - Update Payment function - ID must be greater than 0"
-        );
-        require(
-            _amount > 0,
-            "Gas Contract - Update Payment function - Amount must be greater than 0"
-        );
-        require(
-            _user != address(0),
-            "Gas Contract - Update Payment function - Administrator must have a valid non zero address"
-        );
+        require(_ID > 0, "ID must be > 0");
+        require(_amount > 0, "Amount must be > 0");
+        require(_user != address(0), "Invalid address");
 
         address senderOfTx = msg.sender;
 
@@ -256,6 +222,7 @@ contract GasContract is Ownable, Constants {
                     _amount,
                     payments[_user][ii].recipientName
                 );
+                break; // Exit the loop early once the payment is found and updated
             }
         }
     }
