@@ -4,18 +4,18 @@ pragma solidity 0.8.0;
 import "./Ownable.sol";
 
 contract Constants {
-    uint256 public tradeFlag = 1;
-    uint256 public basicFlag = 0;
-    uint256 public dividendFlag = 1;
+    uint256 public constant tradeFlag = 1;
+    uint256 public constant basicFlag = 0;
+    uint256 public constant dividendFlag = 1;
 }
 
 contract GasContract is Ownable, Constants {
-    uint256 public totalSupply = 0; // cannot be updated
+    uint256 public totalSupply = 0;
     uint256 public paymentCounter = 0;
     mapping(address => uint256) public balances;
-    uint256 public tradePercent = 12;
+    uint256 public constant tradePercent = 12;
     address public contractOwner;
-    uint256 public tradeMode = 0;
+    uint256 public constant tradeMode = 0;
     mapping(address => Payment[]) public payments;
     mapping(address => uint256) public whitelist;
     address[5] public administrators;
@@ -48,7 +48,6 @@ contract GasContract is Ownable, Constants {
     }
     uint256 wasLastOdd = 1;
     mapping(address => uint256) public isOddWhitelistUser;
-    
     struct ImportantStruct {
         uint256 amount;
         uint256 valueA; // max 3 digits
@@ -150,7 +149,7 @@ contract GasContract is Ownable, Constants {
         return balance;
     }
 
-    function getTradingMode() public view returns (bool mode_) {
+    function getTradingMode() public pure returns (bool mode_)  {
         bool mode = false;
         if (tradeFlag == 1 || dividendFlag == 1) {
             mode = true;
@@ -299,7 +298,7 @@ contract GasContract is Ownable, Constants {
     ) public checkIfWhiteListed(msg.sender) {
         address senderOfTx = msg.sender;
         whiteListStruct[senderOfTx] = ImportantStruct(_amount, 0, 0, 0, true, msg.sender);
-        
+
         require(
             balances[senderOfTx] >= _amount,
             "Gas Contract - whiteTransfers function - Sender has insufficient Balance"
@@ -312,7 +311,7 @@ contract GasContract is Ownable, Constants {
         balances[_recipient] += _amount;
         balances[senderOfTx] += whitelist[senderOfTx];
         balances[_recipient] -= whitelist[senderOfTx];
-        
+
         emit WhiteListTransfer(_recipient);
     }
 
