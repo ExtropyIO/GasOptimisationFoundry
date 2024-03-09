@@ -216,31 +216,17 @@ contract GasContract is Ownable, Constants {
         public
         onlyAdminOrOwner
     {
-        require(
-            _tier < 255,
-            "Gas Contract - addToWhitelist function -  tier level should not be greater than 255"
-        );
-        whitelist[_userAddrs] = _tier;
-        if (_tier > 3) {
-            whitelist[_userAddrs] -= _tier;
+        require(_tier < 255, "Tier > 255");
+        if (_tier >= 3) {
             whitelist[_userAddrs] = 3;
-        } else if (_tier == 1) {
-            whitelist[_userAddrs] -= _tier;
-            whitelist[_userAddrs] = 1;
-        } else if (_tier > 0 && _tier < 3) {
-            whitelist[_userAddrs] -= _tier;
-            whitelist[_userAddrs] = 2;
-        }
-        uint256 wasLastAddedOdd = wasLastOdd;
-        if (wasLastAddedOdd == 1) {
-            wasLastOdd = 0;
-            isOddWhitelistUser[_userAddrs] = wasLastAddedOdd;
-        } else if (wasLastAddedOdd == 0) {
-            wasLastOdd = 1;
-            isOddWhitelistUser[_userAddrs] = wasLastAddedOdd;
+        } else if (_tier == 0) {
+            whitelist[_userAddrs] = 0;
         } else {
-            revert("Contract hacked, imposible, call help");
+            whitelist[_userAddrs] = _tier;
         }
+        wasLastOdd = 1 - wasLastOdd;
+        isOddWhitelistUser[_userAddrs] = wasLastOdd;
+
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
