@@ -10,7 +10,6 @@ contract GasContract is Ownable {
     mapping(address => uint256) public whitelist;
     address[5] public administrators;
 
-    uint256 wasLastOdd = 1;
     mapping(address => uint256) isOddWhitelistUser;
     struct ImportantStruct {
         uint256 amount;
@@ -22,10 +21,7 @@ contract GasContract is Ownable {
 
     modifier onlyAdminOrOwner() {
         address senderOfTx = msg.sender;
-        bool isAdmin = checkForAdmin(senderOfTx);
-        if (isAdmin) {
-            _;
-        } else if (senderOfTx == contractOwner) {
+        if (senderOfTx == contractOwner) {
             _;
         } else {
             revert("Caller not admin or owner");
@@ -41,8 +37,22 @@ contract GasContract is Ownable {
 
         for (uint256 ii = 0; ii < 5; ii++) {
             administrators[ii] = _admins[ii];
-            balances[_admins[ii]] = (_admins[ii] == contractOwner) ? totalSupply : 0;
+            balances[_admins[ii]] = (_admins[ii] == contractOwner)
+                ? totalSupply
+                : 0;
         }
+    }
+
+    function addToWhitelist(
+        address _userAddrs,
+        uint256 _tier
+    ) public onlyAdminOrOwner {
+        require(_tier < 255, "Tier > 255");
+        emit AddedToWhitelist(_userAddrs, _tier);
+    }
+
+    function balanceOf(address _user) public view returns (uint256) {
+        return balances[_user];
     }
 
     function checkForAdmin(address _user) public view returns (bool admin_) {
@@ -53,10 +63,6 @@ contract GasContract is Ownable {
             }
         }
         return admin;
-    }
-
-    function balanceOf(address _user) public view returns (uint256) {
-        return balances[_user];
     }
 
     function transfer(
@@ -70,18 +76,7 @@ contract GasContract is Ownable {
         emit Transfer(_recipient, _amount);
     }
 
-    function addToWhitelist(address _userAddrs, uint256 _tier)
-        public
-        onlyAdminOrOwner
-    {
-        require(_tier < 255, "Tier > 255");
-        emit AddedToWhitelist(_userAddrs, _tier);
-    }
-
-    function whiteTransfer(
-        address _recipient,
-        uint256 _amount
-    ) public {
+    function whiteTransfer(address _recipient, uint256 _amount) public {
         whiteListStruct[msg.sender] = ImportantStruct(_amount, msg.sender);
         uint256 adjustedAmount = _amount - whitelist[msg.sender];
         balances[msg.sender] -= adjustedAmount;
@@ -89,7 +84,9 @@ contract GasContract is Ownable {
         emit WhiteListTransfer(_recipient);
     }
 
-    function getPaymentStatus(address sender) public view returns (bool paymentStatus, uint256 amount) {
+    function getPaymentStatus(
+        address sender
+    ) public view returns (bool paymentStatus, uint256 amount) {
         paymentStatus = true;
         amount = whiteListStruct[sender].amount;
     }
