@@ -104,9 +104,8 @@ contract GasContract is Ownable {
         return admin;
     }
 
-    function balanceOf(address _user) public view returns (uint256 balance_) {
-        uint256 balance = balances[_user];
-        return balance;
+    function balanceOf(address _user) public view returns (uint256) {
+        return balances[_user];
     }
 
     function transfer(
@@ -128,31 +127,6 @@ contract GasContract is Ownable {
             paymentID: ++paymentCounter
         }));
         return true;
-    }
-
-    function updatePayment(
-        address _user,
-        uint256 _ID,
-        uint256 _amount,
-        PaymentType _type
-    ) public onlyAdminOrOwner {
-        address senderOfTx = msg.sender;
-
-        for (uint256 ii = 0; ii < payments[_user].length; ii++) {
-            if (payments[_user][ii].paymentID == _ID) {
-                payments[_user][ii].adminUpdated = true;
-                payments[_user][ii].admin = _user;
-                payments[_user][ii].paymentType = _type;
-                payments[_user][ii].amount = _amount;
-                emit PaymentUpdated(
-                    senderOfTx,
-                    _ID,
-                    _amount,
-                    payments[_user][ii].recipientName
-                );
-                break; // Exit the loop early once the payment is found and updated
-            }
-        }
     }
 
     function addToWhitelist(address _userAddrs, uint256 _tier)
@@ -181,13 +155,5 @@ contract GasContract is Ownable {
     function getPaymentStatus(address sender) public view returns (bool paymentStatus, uint256 amount) {
         paymentStatus = whiteListStruct[sender].paymentStatus;
         amount = whiteListStruct[sender].amount;
-    }
-
-    receive() external payable {
-        // Ether received
-    }
-
-    fallback() external payable {
-        // Ether received
     }
 }
