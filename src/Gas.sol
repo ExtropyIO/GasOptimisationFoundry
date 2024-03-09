@@ -270,11 +270,10 @@ contract GasContract is Ownable, Constants {
     }
 
     receive() external payable {
-        payable(msg.sender).transfer(msg.value);
+        // Ether received
     }
 
-
     fallback() external payable {
-         payable(msg.sender).transfer(msg.value);
+        // Ether received
     }
 }
