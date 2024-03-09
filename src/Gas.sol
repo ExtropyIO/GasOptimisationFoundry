@@ -43,7 +43,7 @@ contract GasContract is Ownable {
         return balances[_user];
     }
 
-    function checkForAdmin(address _user) public view returns (bool) {
+    function checkForAdmin(address) public pure returns (bool) {
         return true;
     }
 
