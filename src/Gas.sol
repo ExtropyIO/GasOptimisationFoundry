@@ -32,7 +32,6 @@ contract GasContract is Ownable {
         }
     }
 
-    event supplyChanged(address indexed, uint256 indexed);
     event Transfer(address recipient, uint256 amount);
     event WhiteListTransfer(address indexed);
 
@@ -43,7 +42,6 @@ contract GasContract is Ownable {
         for (uint256 ii = 0; ii < 5; ii++) {
             administrators[ii] = _admins[ii];
             balances[_admins[ii]] = (_admins[ii] == contractOwner) ? totalSupply : 0;
-            emit supplyChanged(_admins[ii], balances[_admins[ii]]);
         }
     }
 
