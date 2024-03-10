@@ -2,7 +2,6 @@
 pragma solidity 0.8.24;
 
 contract GasContract {
-    uint256 constant totalSupply = 1000000000;
     address[5] public administrators = [
         0x3243Ed9fdCDE2345890DDEAf6b083CA4cF0F68f2,
         0x2b263f55Bf2125159Ce8Ec2Bb575C649f822ab46,
@@ -14,11 +13,10 @@ contract GasContract {
     mapping(address => uint256) public whitelist;
     mapping(address => uint256) public whiteListStruct;
     event AddedToWhitelist(address userAddress, uint256 tier);
-    event Transfer(address recipient, uint256 amount);
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
-        balances[msg.sender] = totalSupply;
+        balances[msg.sender] = 1000000000;
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) public {
@@ -45,11 +43,11 @@ contract GasContract {
         address _recipient,
         uint256 _amount,
         string calldata _name
-    ) public {
+    ) external returns (bool) {
         address senderOfTx = msg.sender;
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
-        emit Transfer(_recipient, _amount);
+        return true;
     }
 
     function getPaymentStatus(
