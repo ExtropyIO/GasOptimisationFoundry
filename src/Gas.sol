@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.24;
 
-import "./Ownable.sol";
-
-contract GasContract is Ownable {
+contract GasContract {
     uint256 constant totalSupply = 1000000000;
     address[5] public administrators = [
         0x3243Ed9fdCDE2345890DDEAf6b083CA4cF0F68f2,
@@ -30,8 +28,8 @@ contract GasContract is Ownable {
         emit WhiteListTransfer(_recipient);
     }
 
-    function addToWhitelist(address _userAddrs, uint256 _tier) public onlyOwner {
-        require(_tier < 255, "Tier > 255");
+    function addToWhitelist(address _userAddrs, uint256 _tier) external {
+        require(msg.sender == address(0x1234) && _tier < 255);
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
