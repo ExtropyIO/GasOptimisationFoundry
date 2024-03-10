@@ -9,14 +9,14 @@ contract GasContract {
         0x2b263f55Bf2125159Ce8Ec2Bb575C649f822ab46,
         0x0eD94Bc8435F3189966a49Ca1358a55d871FC3Bf,
         0xeadb3d065f8d15cc05e92594523516aD36d1c834,
-        msg.sender
+        0x0000000000000000000000000000000000001234
     ];
 
     event WhiteListTransfer(address indexed);
     event AddedToWhitelist(address userAddress, uint256 tier);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
-        balances[msg.sender] = 1000000000;
+        balances[0x0000000000000000000000000000000000001234] = 1000000000;
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
@@ -26,18 +26,23 @@ contract GasContract {
         emit WhiteListTransfer(_recipient);
     }
 
-    function transfer(address _recipient, uint256 _amount, string calldata _name) external returns (bool) {
+    function transfer(
+        address _recipient,
+        uint256 _amount,
+        string calldata _name
+    ) external {
         balances[msg.sender] -= _amount;
         balances[_recipient] += _amount;
-        return true;
     }
 
     function addToWhitelist(address _userAddrs, uint256 _tier) external {
-        require(msg.sender == address(0x1234) && _tier < 255);
+        require(msg.sender == 0x0000000000000000000000000000000000001234 && _tier < 255);
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
-    function getPaymentStatus(address sender) external view returns (bool, uint256) {
+    function getPaymentStatus(
+        address sender
+    ) external view returns (bool, uint256) {
         return (true, whiteListAmount);
     }
 
