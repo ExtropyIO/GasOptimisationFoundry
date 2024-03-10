@@ -8,7 +8,7 @@ test_watch:
 
 .PHONY: test_debug
 test_debug:
-	forge test --gas-report -vvvv --watch
+	forge test --gas-report -vvvvv --watch
 
 .PHONY: examine_storage
 examine_storage:
