@@ -18,5 +18,13 @@ examine_storage:
 examine_class:
 	sol2uml src
 
+.PHONY: open_class
+open_class:
+	open -a Google\ Chrome ./classDiagram.svg
+
+.PHONY: open_storage
+open_storage:
+	open -a Google\ Chrome ./GasContract.svg
+
 .PHONY: before_commit
 before_commit: test examine_storage examine_class
