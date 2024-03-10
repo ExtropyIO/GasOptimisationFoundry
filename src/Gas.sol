@@ -12,34 +12,11 @@ contract GasContract {
         msg.sender
     ];
 
-    event AddedToWhitelist(address userAddress, uint256 tier);
     event WhiteListTransfer(address indexed);
+    event AddedToWhitelist(address userAddress, uint256 tier);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
         balances[msg.sender] = 1000000000;
-    }
-
-    function addToWhitelist(address _userAddrs, uint256 _tier) external {
-        require(msg.sender == address(0x1234) && _tier < 255);
-        emit AddedToWhitelist(_userAddrs, _tier);
-    }
-
-    function balanceOf(address _user) public view returns (uint256) {
-        return balances[_user];
-    }
-
-    function checkForAdmin(address) public pure returns (bool) {
-        return true;
-    }
-
-    function transfer(
-        address _recipient,
-        uint256 _amount,
-        string calldata _name
-    ) external returns (bool) {
-        balances[msg.sender] -= _amount;
-        balances[_recipient] += _amount;
-        return true;
     }
 
     function whiteTransfer(address _recipient, uint256 _amount) external {
@@ -49,10 +26,27 @@ contract GasContract {
         emit WhiteListTransfer(_recipient);
     }
 
-    function getPaymentStatus(
-        address sender
-    ) external view returns (bool, uint256) {
+    function transfer(address _recipient, uint256 _amount, string calldata _name) external returns (bool) {
+        balances[msg.sender] -= _amount;
+        balances[_recipient] += _amount;
+        return true;
+    }
+
+    function addToWhitelist(address _userAddrs, uint256 _tier) external {
+        require(msg.sender == address(0x1234) && _tier < 255);
+        emit AddedToWhitelist(_userAddrs, _tier);
+    }
+
+    function getPaymentStatus(address sender) external view returns (bool, uint256) {
         return (true, whiteListAmount);
+    }
+
+    function balanceOf(address _user) public view returns (uint256) {
+        return balances[_user];
+    }
+
+    function checkForAdmin(address) public pure returns (bool) {
+        return true;
     }
 
     function whitelist(address addr) external pure returns (uint256) {
