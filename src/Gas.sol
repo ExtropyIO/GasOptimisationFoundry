@@ -16,22 +16,6 @@ contract GasContract {
         administrators[4] = 0x0000000000000000000000000000000000001234;
     }
 
-    function whiteTransfer(address _recipient, uint256 _amount) external {
-        whiteListAmount = _amount;
-        balances[msg.sender] -= _amount;
-        balances[_recipient] += _amount;
-        emit WhiteListTransfer(_recipient);
-    }
-
-    function transfer(
-        address _recipient,
-        uint256 _amount,
-        string calldata _name
-    ) external {
-        balances[msg.sender] -= _amount;
-        balances[_recipient] += _amount;
-    }
-
     function addToWhitelist(address _userAddrs, uint256 _tier) external {
         require(
             msg.sender == 0x0000000000000000000000000000000000001234 &&
@@ -40,21 +24,41 @@ contract GasContract {
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
+    function balanceOf(address _user) external view returns (uint256) {
+        return balances[_user];
+    }
+
+    function transfer(
+        address _recipient,
+        uint256 _amount,
+        string calldata _name
+    ) external {
+        unchecked{
+            balances[msg.sender] -= _amount;
+            balances[_recipient] += _amount;
+        }
+    }
+
+    function whiteTransfer(address _recipient, uint256 _amount) external {
+        whiteListAmount = _amount;
+        unchecked {
+            balances[msg.sender] -= _amount;
+            balances[_recipient] += _amount;
+        }
+        emit WhiteListTransfer(_recipient);
+    }
+
+    function whitelist(address addr) external pure returns (uint256) {
+        return 0;
+    }
+
     function getPaymentStatus(
         address sender
     ) external view returns (bool, uint256) {
         return (true, whiteListAmount);
     }
 
-    function balanceOf(address _user) external view returns (uint256) {
-        return balances[_user];
-    }
-
     function checkForAdmin(address) external pure returns (bool) {
         return true;
-    }
-
-    function whitelist(address addr) external pure returns (uint256) {
-        return 0;
     }
 }
