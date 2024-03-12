@@ -20,20 +20,20 @@
 <text text-anchor="start" x="8" y="-268.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;whiteListAmount: uint256</text>
 <text text-anchor="start" x="8" y="-251.9" font-family="Times,serif" font-size="14.00">Public:</text>
 <text text-anchor="start" x="8" y="-235.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;balances: mapping(address=&gt;uint256)</text>
-<text text-anchor="start" x="8" y="-218.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;administrators: address[5]</text>
-<polyline fill="none" stroke="black" points="0,-210.1 403.33,-210.1 "/>
-<text text-anchor="start" x="8" y="-193.5" font-family="Times,serif" font-size="14.00">External:</text>
-<text text-anchor="start" x="8" y="-176.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;whiteTransfer(_recipient: address, _amount: uint256)</text>
+<polyline fill="none" stroke="black" points="0,-226.9 403.33,-226.9 "/>
+<text text-anchor="start" x="8" y="-210.3" font-family="Times,serif" font-size="14.00">External:</text>
+<text text-anchor="start" x="8" y="-193.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;addToWhitelist(_userAddrs: address, _tier: uint256)</text>
+<text text-anchor="start" x="8" y="-176.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;balanceOf(_user: address): uint256</text>
 <text text-anchor="start" x="8" y="-159.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;transfer(_recipient: address, _amount: uint256, _name: string)</text>
-<text text-anchor="start" x="8" y="-143.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;addToWhitelist(_userAddrs: address, _tier: uint256)</text>
-<text text-anchor="start" x="8" y="-126.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;getPaymentStatus(sender: address): (bool, uint256)</text>
-<text text-anchor="start" x="8" y="-109.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;balanceOf(_user: address): uint256</text>
+<text text-anchor="start" x="8" y="-143.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;whiteTransfer(_recipient: address, _amount: uint256)</text>
+<text text-anchor="start" x="8" y="-126.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;whitelist(addr: address): uint256</text>
+<text text-anchor="start" x="8" y="-109.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;getPaymentStatus(sender: address): (bool, uint256)</text>
 <text text-anchor="start" x="8" y="-92.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;checkForAdmin(address): bool</text>
-<text text-anchor="start" x="8" y="-75.9" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;whitelist(addr: address): uint256</text>
-<text text-anchor="start" x="8" y="-59.1" font-family="Times,serif" font-size="14.00">Public:</text>
-<text text-anchor="start" x="8" y="-42.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; WhiteListTransfer(address)</text>
-<text text-anchor="start" x="8" y="-25.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; AddedToWhitelist(userAddress: address, tier: uint256)</text>
-<text text-anchor="start" x="8" y="-8.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;constructor(_admins: address[], _totalSupply: uint256)</text>
+<text text-anchor="start" x="8" y="-75.9" font-family="Times,serif" font-size="14.00">Public:</text>
+<text text-anchor="start" x="8" y="-59.1" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; WhiteListTransfer(address)</text>
+<text text-anchor="start" x="8" y="-42.3" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;&lt;&lt;event&gt;&gt; AddedToWhitelist(userAddress: address, tier: uint256)</text>
+<text text-anchor="start" x="8" y="-25.5" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;constructor(_admins: address[], _totalSupply: uint256)</text>
+<text text-anchor="start" x="8" y="-8.7" font-family="Times,serif" font-size="14.00"> &#160;&#160;&#160;administrators(index: uint): (admin: address)</text>
 </g>
 </g>
 </svg>
