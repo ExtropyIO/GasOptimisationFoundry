@@ -142,7 +142,7 @@ contract GasTest is Test {
         vm.assume(_recipient != address(0));
         vm.assume(_sender != address(0));
          _amount = bound(_amount,0 , gas.balanceOf(owner));
-        _tier = bound( _tier, 1, 244);
+        _tier = bound( _tier, 1, 254);
         vm.assume(_amount > 3);
         vm.assume(bytes(_name).length < 9 && bytes(_name).length >0);
         vm.startPrank(owner);
